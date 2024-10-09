@@ -8,12 +8,12 @@ with Ada.Integer_Text_IO;
 with Ada.Numerics.Discrete_Random;
 
 
-procedure Simulation is
+procedure Main is
 
    ----GLOBAL VARIABLES---
 
    Number_Of_Producers: constant Integer := 8;
-   Number_Of_Assemblies: constant Integer := 16;
+   Number_Of_Assemblies: constant Integer := 4;
    Number_Of_Consumers: constant Integer := 5;
 
    subtype Producer_Type is Integer range 1 .. Number_Of_Producers;
@@ -22,15 +22,12 @@ procedure Simulation is
 
 
    --each Producer is assigned a Product that it produces
-   Product_Name: constant array (Producer_Type) of String(1 .. 25)
-     := ("Sok jablkowy", "Sok pomaranczowy", "Sok mango", "Sok arbuzowy",
-         "Sok sliwkowy", "Sok ananasowy", "Sok cytrynowy", "Sok kaktusowy");
+   Product_Name: constant array (Producer_Type) of String(1 .. 7)
+     := ("Sok_jab", "Sok_pom", "Sok_man", "Sok_arb",
+         "Sok_sli", "Sok_ana", "Sok_cyt", "Sok_kak");
    --Assembly is a collection of products
-   Assembly_Name: constant array (Assembly_Type) of String(1 .. 25)
-     := ("Czteropak JabPom", "Czteropak ManArb", "Czteropak SliAna", "Czteropak CytKak",
-         "Czteropak Jab", "Czteropak Pom", "Czteropak Man", "Czteropak Arb",
-         "Czteropak Sli", "Czteropak Ana", "Czteropak Cyt", "Czteropak Kak",
-         "Osmiopak Jabpom", "Osmiopak ManArb", "Osmiopak SliAna", "Osmiopak CytKak");
+   Assembly_Name: constant array (Assembly_Type) of String(1 .. 19)
+     := ("Zestaw_JabPomManArb", "Zestaw_SliAnaCytKak", "Zestaw_ManArbCytKak", "Zestaw_JabPomSliAna");
 
 
    ----TASK DECLARATIONS----
@@ -112,8 +109,8 @@ procedure Simulation is
       Consumption: Integer;
       Assembly_Type: Integer;
       Consumer_Name: constant array (1 .. Number_Of_Consumers)
-        of String(1 .. 15)
-        := ("Marek", "Jakub", "Krzysztof", "Bruno", "Jozik");
+        of String(1 .. 5)
+        := ("Marek", "Jakub", "Krzyh", "Bruno", "Jozik");
    begin
       accept Start(Consumer_Number: in Consumer_Type;
                    Consumption_Time: in Integer) do
@@ -141,14 +138,15 @@ procedure Simulation is
       Storage_Capacity: constant Integer := 30;
       type Storage_type is array (Producer_Type) of Integer;
       Storage: Storage_type
-        := (0, 0, 0, 0, 0);
+        := (0, 0, 0, 0, 0, 0, 0, 0);
       Assembly_Content: array(Assembly_Type, Producer_Type) of Integer
-        := ((2, 1, 2, 0, 2),
-            (1, 2, 0, 1, 0),
-            (3, 2, 2, 0, 1));
+        := ((3, 3, 3, 3, 0, 0, 0, 0),
+            (0, 0, 0, 0, 3, 3, 3, 3),
+            (0, 0, 3, 3, 0, 0, 3, 3),
+            (3, 3, 0, 0, 3, 3, 0, 0));
       Max_Assembly_Content: array(Producer_Type) of Integer;
       Assembly_Number: array(Assembly_Type) of Integer
-        := (1, 1, 1);
+        := (1, 1, 1, 1);
       In_Storage: Integer := 0;
 
       procedure Setup_Variables is
@@ -239,6 +237,6 @@ begin
    for J in 1 .. Number_Of_Consumers loop
       K(J).Start(J,12);
    end loop;
-end Simulation;
+end Main;
 
 
