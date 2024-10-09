@@ -112,8 +112,8 @@ procedure Simulation is
       Consumption: Integer;
       Assembly_Type: Integer;
       Consumer_Name: constant array (1 .. Number_Of_Consumers)
-        of String(1 .. 9)
-        := ("Consumer1", "Consumer2");
+        of String(1 .. 15)
+        := ("Marek", "Jakub", "Krzysztof", "Bruno", "Jozik");
    begin
       accept Start(Consumer_Number: in Consumer_Type;
                    Consumption_Time: in Integer) do
