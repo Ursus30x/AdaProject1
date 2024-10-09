@@ -1,7 +1,6 @@
 -- A skeleton of an ADA program for an assignment in programming languages
 
 
---Twoja stara robi loda
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
 with Ada.Integer_Text_IO;
@@ -12,9 +11,9 @@ procedure Simulation is
 
    ----GLOBAL VARIABLES---
 
-   Number_Of_Producers: constant Integer := 5;
-   Number_Of_Assemblies: constant Integer := 3;
-   Number_Of_Consumers: constant Integer := 2;
+   Number_Of_Producers: constant Integer := 8;
+   Number_Of_Assemblies: constant Integer := 16;
+   Number_Of_Consumers: constant Integer := 5;
 
    subtype Producer_Type is Integer range 1 .. Number_Of_Producers;
    subtype Assembly_Type is Integer range 1 .. Number_Of_Assemblies;
@@ -22,11 +21,15 @@ procedure Simulation is
 
 
    --each Producer is assigned a Product that it produces
-   Product_Name: constant array (Producer_Type) of String(1 .. 8)
-     := ("Product1", "Product2", "Product3", "Product4", "Product5");
+   Product_Name: constant array (Producer_Type) of String(1 .. 25)
+     := ("Sok jablkowy", "Sok pomaranczowy", "Sok mango", "Sok arbuzowy",
+         "Sok sliwkowy", "Sok ananasowy", "Sok cytrynowy", "Sok kaktusowy");
    --Assembly is a collection of products
-   Assembly_Name: constant array (Assembly_Type) of String(1 .. 9)
-     := ("Assembly1", "Assembly2", "Assembly3");
+   Assembly_Name: constant array (Assembly_Type) of String(1 .. 25)
+     := ("Czteropak JabPom", "Czteropak ManArb", "Czteropak SliAna", "Czteropak CytKak",
+         "Czteropak Jab", "Czteropak Pom", "Czteropak Man", "Czteropak Arb",
+         "Czteropak Sli", "Czteropak Ana", "Czteropak Cyt", "Czteropak Kak",
+         "Osmiopak Jabpom", "Osmiopak ManArb", "Osmiopak SliAna", "Osmiopak CytKak");
 
 
    ----TASK DECLARATIONS----
