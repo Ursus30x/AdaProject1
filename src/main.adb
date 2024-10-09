@@ -1,4 +1,5 @@
 -- A skeleton of an ADA program for an assignment in programming languages
+-- Base for a juice production establishment
 
 
 with Ada.Text_IO; use Ada.Text_IO;
