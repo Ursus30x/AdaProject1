@@ -8,7 +8,7 @@ with Ada.Integer_Text_IO;
 with Ada.Numerics.Discrete_Random;
 
 
-procedure Main is
+procedure Simulation is
 
    ----GLOBAL VARIABLES---
 
@@ -237,6 +237,6 @@ begin
    for J in 1 .. Number_Of_Consumers loop
       K(J).Start(J,12);
    end loop;
-end Main;
+end Simulation;
 
 
