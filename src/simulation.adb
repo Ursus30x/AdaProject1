@@ -129,15 +129,22 @@ procedure Simulation is
          Consumer_Nb := Consumer_Number;
          Consumption := Consumption_Time;
       end Start;
+
       Put_Line(ESC & "[96m" & "C: Started consumer " & Consumer_Name(Consumer_Nb) & ESC & "[0m");
+      
       loop
          delay Duration(Random_Consumption.Random(G)); --  simulate consumption
          Assembly_Type := Random_Assembly.Random(GA);
          -- take an assembly for consumption
          B.Deliver(Assembly_Type, Assembly_Number);
-         Put_Line(ESC & "[96m" & "C: " & Consumer_Name(Consumer_Nb) & " takes assembly " &
+         if Assembly_Number = 0 then
+            Put_Line(ESC & "[96m" & "C: " & Consumer_Name(Consumer_Nb) & " takes assembly " &
                     Assembly_Name(Assembly_Type) & " number " &
                     Integer'Image(Assembly_Number) & ESC & "[0m");
+         else
+            Put_Line(ESC & "[96m" & "C: " & Consumer_Name(Consumer_Nb) & " orders assembly " &
+                    Assembly_Name(Assembly_Type) & " but couldnt sell it ");
+         end if;
       end loop;
    end Consumer;
 
