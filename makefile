@@ -1,9 +1,9 @@
 main: clean
 
-	gnatmake src/main.adb
+	gnatmake src/simulation.adb
 
 clean:
-	rm -f main
-	rm -f main.ali
-	rm -f main.o
+	rm -f simulation
+	rm -f simulation.ali
+	rm -f simulation.o
 

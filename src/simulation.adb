@@ -78,15 +78,25 @@ procedure Simulation is
          Producer_Type_Number := Product;
          Production := Production_Time;
       end Start;
+
       Put_Line(ESC & "[93m" & "P: Started producer of " & Product_Name(Producer_Type_Number) & ESC & "[0m");
+      
       loop
          Random_Time := Duration(Random_Production.Random(G));
          delay Random_Time;
          Put_Line(ESC & "[93m" & "P: Produced product " & Product_Name(Producer_Type_Number)
                   & " number "  & Integer'Image(Product_Number) & ESC & "[0m");
-         -- Accept for storage
-         B.Take(Producer_Type_Number, Product_Number);
-         Product_Number := Product_Number + 1;
+         -- Accept (or not) for storage
+         loop 
+            select
+               B.Take(Producer_Type_Number, Product_Number);
+               Product_Number := Product_Number + 1;
+               exit;
+            else
+               Put_Line("Magazyn przetwarza inne dostawy, prosze poczekac");
+               delay Duration(3.0);
+            end select;
+         end loop;
       end loop;
    end Producer;
 
