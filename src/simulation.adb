@@ -21,11 +21,14 @@ procedure Simulation is
    subtype Days_Type is Integer range 1 .. Number_Of_Days;
 
    --each Producer is assigned a Product that it produces
-   Product_Name: constant array (Producer_Type) of String(1 .. 8)
-     := ("Product1", "Product2", "Product3", "Product4", "Product5");
+
+   Product_Name: constant array (Producer_Type) of String(1 .. 10)
+     := ("Jablko    ", "Pomarancza", "Mango     ", "Arbuz     ",
+         "Sliwka    ", "Ananas    ", "Cytryna   ", "Kaktus    ");
    --Assembly is a collection of products
-   Assembly_Name: constant array (Assembly_Type) of String(1 .. 9)
-     := ("Assembly1", "Assembly2", "Assembly3");
+   Assembly_Name: constant array (Assembly_Type) of String(1 .. 16)
+     := ("Sok_JabPomManArb", "Sok_SliAnaCytKak", "Sok_ManArbCytKak", "Sok_JabPomSliAna");
+
 
 
    ----TASK DECLARATIONS----
