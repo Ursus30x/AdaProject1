@@ -26,7 +26,7 @@ procedure Simulation is
      := ("Jablko    ", "Pomarancza", "Mango     ", "Arbuz     ",
          "Sliwka    ", "Ananas    ", "Cytryna   ", "Kaktus    ");
    --Assembly is a collection of products
-   Assembly_Name: constant array (Assembly_Type) of String(1 .. 19)
+   Assembly_Name: constant array (Assembly_Type) of String(1 .. 16)
      := ("Sok_JabPomManArb", "Sok_SliAnaCytKak", "Sok_ManArbCytKak", "Sok_JabPomSliAna");
 
 
