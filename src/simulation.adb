@@ -87,13 +87,20 @@ procedure Simulation is
       end Start;
       Put_Line(ESC & "[93m" & "P: Started producer of " & Product_Name(Producer_Type_Number) & ESC & "[0m");
       loop
-         Random_Time := Duration(Random_Production.Random(G));
-         delay Random_Time;
-         Put_Line(ESC & "[93m" & "P: Produced product " & Product_Name(Producer_Type_Number)
-                  & " number "  & Integer'Image(Product_Number) & ESC & "[0m");
-         -- Accept for storage
-         B.Take(Producer_Type_Number, Product_Number);
-         Product_Number := Product_Number + 1;
+         select
+         delay Duration(3);
+         Put_Line(ESC & "[93m" & "P: Stworzyl produkt " & Product_Name(Producer_Type_Number)
+                  & " ale czekal za dlugo by go dostarczyc, wiec dostarczyl go konkurecji " & ESC & "[0m");
+
+         then abort
+            Random_Time := Duration(Random_Production.Random(G));
+            delay Random_Time;
+            Put_Line(ESC & "[93m" & "P: Produced product " & Product_Name(Producer_Type_Number)
+                     & " number "  & Integer'Image(Product_Number) & ESC & "[0m");
+            -- Accept for storage
+            B.Take(Producer_Type_Number, Product_Number);
+            Product_Number := Product_Number + 1;
+         end select;
       end loop;
    end Producer;
 
@@ -192,16 +199,7 @@ procedure Simulation is
          return True;
       end Can_Deliver;
 
-      procedure Today_Is_Sunday is
-      begin
-         for W in Producer_Type loop
-            if Storage(W) > 0 then
-               Storage(W) := Storage(W) - 1;
-            end if;
-         end loop;
-         Put_Line("Niedziela nie handlowa, inspekcja magazynu!");
-      end Today_Is_Sunday;
-
+      
       procedure Storage_Contents is
       begin
          for W in Producer_Type loop
@@ -211,6 +209,20 @@ procedure Simulation is
          Put_Line("|   Number of products in storage: " & Integer'Image(In_Storage));
 
       end Storage_Contents;
+
+      procedure Today_Is_Sunday is
+      begin
+         for W in Producer_Type loop
+            if Storage(W) > 0 then
+               Storage(W) := Storage(W) - 1;
+               In_Storage := In_Storage - 1;
+
+            end if;
+         end loop;
+         Put_Line(ESC & "[32m" & "Niedziela nie handlowa, inspekcja magazynu!" & ESC & "[0m");
+         Storage_Contents;
+      end Today_Is_Sunday;
+
 
    begin
       Put_Line(ESC & "[91m" & "B: Buffer started" & ESC & "[0m");
@@ -268,12 +280,15 @@ procedure Simulation is
          Day := day_number;
       end Start;
       loop
+         
          Put_Line(ESC & "[32m" & "Zaczal sie dzien" & Integer'Image(Day) & " tygodnia" & ESC & "[0m");
-         delay DayTime;
-         Day:=Day+1;
          if Day = 7 then
             B.Sunday(7);
-         elsif Day > 7 then
+         end if;
+         delay DayTime;
+         Day:=Day+1;
+         
+         if Day > 7 then
             Day := 1;
          end if;
       end loop;
