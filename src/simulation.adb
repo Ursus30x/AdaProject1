@@ -1,6 +1,4 @@
 -- A skeleton of an ADA program for an assignment in programming languages
--- Base for a juice production establishment
-
 
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Characters.Latin_1; use Ada.Characters.Latin_1;
@@ -12,22 +10,22 @@ procedure Simulation is
 
    ----GLOBAL VARIABLES---
 
-   Number_Of_Producers: constant Integer := 8;
-   Number_Of_Assemblies: constant Integer := 4;
-   Number_Of_Consumers: constant Integer := 5;
+   Number_Of_Producers: constant Integer := 5;
+   Number_Of_Assemblies: constant Integer := 3;
+   Number_Of_Consumers: constant Integer := 2;
+   Number_Of_Days: constant Integer := 7;
 
    subtype Producer_Type is Integer range 1 .. Number_Of_Producers;
    subtype Assembly_Type is Integer range 1 .. Number_Of_Assemblies;
    subtype Consumer_Type is Integer range 1 .. Number_Of_Consumers;
-
+   subtype Days_Type is Integer range 1 .. Number_Of_Days;
 
    --each Producer is assigned a Product that it produces
-   Product_Name: constant array (Producer_Type) of String(1 .. 7)
-     := ("Sok_jab", "Sok_pom", "Sok_man", "Sok_arb",
-         "Sok_sli", "Sok_ana", "Sok_cyt", "Sok_kak");
+   Product_Name: constant array (Producer_Type) of String(1 .. 8)
+     := ("Product1", "Product2", "Product3", "Product4", "Product5");
    --Assembly is a collection of products
-   Assembly_Name: constant array (Assembly_Type) of String(1 .. 19)
-     := ("Zestaw_JabPomManArb", "Zestaw_SliAnaCytKak", "Zestaw_ManArbCytKak", "Zestaw_JabPomSliAna");
+   Assembly_Name: constant array (Assembly_Type) of String(1 .. 9)
+     := ("Assembly1", "Assembly2", "Assembly3");
 
 
    ----TASK DECLARATIONS----
@@ -50,11 +48,18 @@ procedure Simulation is
       entry Take(Product: in Producer_Type; Number: in Integer);
       -- Deliver an assembly (provided there are enough products for it)
       entry Deliver(Assembly: in Assembly_Type; Number: out Integer);
+
+      entry Sunday();
    end Buffer;
+
+   task type Calendar is
+      entry Start(day_number: in Days_Type);
+   end Calendar;
 
    P: array ( 1 .. Number_Of_Producers ) of Producer;
    K: array ( 1 .. Number_Of_Consumers ) of Consumer;
    B: Buffer;
+   C: Calendar;
 
 
    ----TASK DEFINITIONS----
@@ -78,25 +83,15 @@ procedure Simulation is
          Producer_Type_Number := Product;
          Production := Production_Time;
       end Start;
-
       Put_Line(ESC & "[93m" & "P: Started producer of " & Product_Name(Producer_Type_Number) & ESC & "[0m");
-      
       loop
          Random_Time := Duration(Random_Production.Random(G));
          delay Random_Time;
          Put_Line(ESC & "[93m" & "P: Produced product " & Product_Name(Producer_Type_Number)
                   & " number "  & Integer'Image(Product_Number) & ESC & "[0m");
-         -- Accept (or not) for storage
-         loop 
-            select
-               B.Take(Producer_Type_Number, Product_Number);
-               Product_Number := Product_Number + 1;
-               exit;
-            else
-               Put_Line("Magazyn przetwarza inne dostawy, prosze poczekac");
-               delay Duration(3.0);
-            end select;
-         end loop;
+         -- Accept for storage
+         B.Take(Producer_Type_Number, Product_Number);
+         Product_Number := Product_Number + 1;
       end loop;
    end Producer;
 
@@ -119,8 +114,8 @@ procedure Simulation is
       Consumption: Integer;
       Assembly_Type: Integer;
       Consumer_Name: constant array (1 .. Number_Of_Consumers)
-        of String(1 .. 5)
-        := ("Marek", "Jakub", "Krzyh", "Bruno", "Jozik");
+        of String(1 .. 9)
+        := ("Consumer1", "Consumer2");
    begin
       accept Start(Consumer_Number: in Consumer_Type;
                    Consumption_Time: in Integer) do
@@ -129,21 +124,19 @@ procedure Simulation is
          Consumer_Nb := Consumer_Number;
          Consumption := Consumption_Time;
       end Start;
-
       Put_Line(ESC & "[96m" & "C: Started consumer " & Consumer_Name(Consumer_Nb) & ESC & "[0m");
-      
       loop
          delay Duration(Random_Consumption.Random(G)); --  simulate consumption
          Assembly_Type := Random_Assembly.Random(GA);
          -- take an assembly for consumption
          B.Deliver(Assembly_Type, Assembly_Number);
          if Assembly_Number = 0 then
-            Put_Line(ESC & "[96m" & "C: " & Consumer_Name(Consumer_Nb) & " takes assembly " &
+            Put_Line(ESC & "[96m" & "C: " & Consumer_Name(Consumer_Nb) & " zamowil  " &
+                    Assembly_Name(Assembly_Type) & " ale nie ma wystarczajacej ilosci produktow by go stworzyc "& ESC & "[0m");
+         else
+         Put_Line(ESC & "[96m" & "C: " & Consumer_Name(Consumer_Nb) & " takes assembly " &
                     Assembly_Name(Assembly_Type) & " number " &
                     Integer'Image(Assembly_Number) & ESC & "[0m");
-         else
-            Put_Line(ESC & "[96m" & "C: " & Consumer_Name(Consumer_Nb) & " orders assembly " &
-                    Assembly_Name(Assembly_Type) & " but couldnt sell it ");
          end if;
       end loop;
    end Consumer;
@@ -155,15 +148,14 @@ procedure Simulation is
       Storage_Capacity: constant Integer := 30;
       type Storage_type is array (Producer_Type) of Integer;
       Storage: Storage_type
-        := (0, 0, 0, 0, 0, 0, 0, 0);
+        := (0, 0, 0, 0, 0);
       Assembly_Content: array(Assembly_Type, Producer_Type) of Integer
-        := ((3, 3, 3, 3, 0, 0, 0, 0),
-            (0, 0, 0, 0, 3, 3, 3, 3),
-            (0, 0, 3, 3, 0, 0, 3, 3),
-            (3, 3, 0, 0, 3, 3, 0, 0));
+        := ((2, 1, 2, 0, 2),
+            (1, 2, 0, 1, 0),
+            (3, 2, 2, 0, 1));
       Max_Assembly_Content: array(Producer_Type) of Integer;
       Assembly_Number: array(Assembly_Type) of Integer
-        := (1, 1, 1, 1);
+        := (1, 1, 1);
       In_Storage: Integer := 0;
 
       procedure Setup_Variables is
@@ -211,43 +203,67 @@ procedure Simulation is
       Put_Line(ESC & "[91m" & "B: Buffer started" & ESC & "[0m");
       Setup_Variables;
       loop
-         accept Take(Product: in Producer_Type; Number: in Integer) do
-            if Can_Accept(Product) then
-               Put_Line(ESC & "[91m" & "B: Accepted product " & Product_Name(Product) & " number " &
-                          Integer'Image(Number)& ESC & "[0m");
-               Storage(Product) := Storage(Product) + 1;
-               In_Storage := In_Storage + 1;
-            else
-               Put_Line(ESC & "[91m" & "B: Rejected product " & Product_Name(Product) & " number " &
-                          Integer'Image(Number)& ESC & "[0m");
-            end if;
-         end Take;
-         Storage_Contents;
+         select
+            accept Deliver(Assembly: in Assembly_Type; Number: out Integer) do
+               if Can_Deliver(Assembly) then
+                  Put_Line(ESC & "[91m" & "B: Delivered assembly " & Assembly_Name(Assembly) & " number " &
+                           Integer'Image(Assembly_Number(Assembly))& ESC & "[0m");
+                  for W in Producer_Type loop
+                     Storage(W) := Storage(W) - Assembly_Content(Assembly, W);
+                     In_Storage := In_Storage - Assembly_Content(Assembly, W);
+                  end loop;
+                  Number := Assembly_Number(Assembly);
+                  Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
+               else
+                  Put_Line(ESC & "[91m" & "B: Lacking products for assembly " & Assembly_Name(Assembly)& ESC & "[0m");
+                  Number := 0;
+               end if;
+            end Deliver;
+            or
+            accept Take(Product: in Producer_Type; Number: in Integer) do
+               if Can_Accept(Product) then
+                  Put_Line(ESC & "[91m" & "B: Accepted product " & Product_Name(Product) & " number " &
+                           Integer'Image(Number)& ESC & "[0m");
+                  Storage(Product) := Storage(Product) + 1;
+                  In_Storage := In_Storage + 1;
+               else
+                  Put_Line(ESC & "[91m" & "B: Rejected product " & Product_Name(Product) & " number " &
+                           Integer'Image(Number)& ESC & "[0m");
+               end if;
+            end Take;
 
-         accept Deliver(Assembly: in Assembly_Type; Number: out Integer) do
-            if Can_Deliver(Assembly) then
-               Put_Line(ESC & "[91m" & "B: Delivered assembly " & Assembly_Name(Assembly) & " number " &
-                          Integer'Image(Assembly_Number(Assembly))& ESC & "[0m");
-               for W in Producer_Type loop
-                  Storage(W) := Storage(W) - Assembly_Content(Assembly, W);
-                  In_Storage := In_Storage - Assembly_Content(Assembly, W);
-               end loop;
-               Number := Assembly_Number(Assembly);
-               Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
-            else
-               Put_Line(ESC & "[91m" & "B: Lacking products for assembly " & Assembly_Name(Assembly)& ESC & "[0m");
-               Number := 0;
-            end if;
-         end Deliver;
+         end select;
          Storage_Contents;
 
       end loop;
    end Buffer;
 
 
+   --Calendar--
+
+   task body Calendar is
+   DayTime: Duration;
+   Day: Integer;
+   begin 
+      accept Start(day_number: in Days_Type) do
+         DayTime := Duration(1);
+         Day := day_number;
+      end Start;
+      loop
+         Put_Line(ESC & "[32m" & "Zaczal sie dzien" & Integer'Image(Day) & " tygodnia" & ESC & "[0m");
+         delay DayTime;
+         Day:=Day+1;
+         if Day > 7 then
+            Day := 1;
+         end if;
+      end loop;
+      
+   end Calendar;
+
 
    ---"MAIN" FOR SIMULATION---
 begin
+   C.Start(1);
    for I in 1 .. Number_Of_Producers loop
       P(I).Start(I, 10);
    end loop;
