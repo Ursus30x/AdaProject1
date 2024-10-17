@@ -20,15 +20,19 @@ procedure Simulation is
    subtype Consumer_Type is Integer range 1 .. Number_Of_Consumers;
    subtype Days_Type is Integer range 1 .. Number_Of_Days;
 
-   --each Producer is assigned a Product that it produces
+   --A range of collected fruits
 
    Product_Name: constant array (Producer_Type) of String(1 .. 7)
      := ("Jablko ", "Kiwi   ", "Mango  ", "Arbuz  ", "Sliwka ", "Ananas ", "Cytryna", "Kaktus ");
-   --Assembly is a collection of products
+   
+   --Assembly of juices
+   
    Assembly_Name: constant array (Assembly_Type) of String(1 .. 10)
      := ("Sok_JabKiw", "Sok_SliAna", "Sok_ArbCyt", "Sok_JabKak",
          "Sok_ManArb", "Sok_CytKak", "Sok_KiwSli", "Sok_ManAna");
+   
    -- Consumer names
+   
    Consumer_Name: constant array (1 .. Number_Of_Consumers)
         of String(1 .. 5)
         := ("Jakub", "Kazik", "Marek", "Julia", "Basia" , "Kasia");
