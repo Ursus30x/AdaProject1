@@ -12,7 +12,7 @@ procedure Simulation is
 
    Number_Of_Producers: constant Integer := 8;
    Number_Of_Assemblies: constant Integer := 8;
-   Number_Of_Consumers: constant Integer := 3;
+   Number_Of_Consumers: constant Integer := 6;
    Number_Of_Days: constant Integer := 7;
 
    subtype Producer_Type is Integer range 1 .. Number_Of_Producers;
@@ -125,7 +125,7 @@ procedure Simulation is
       Assembly_Type: Integer;
       Consumer_Name: constant array (1 .. Number_Of_Consumers)
         of String(1 .. 5)
-        := ("Jakub", "Kazik", "Marek");
+        := ("Jakub", "Kazik", "Marek", "Julia", "Basia" , "Kasia");
    begin
       accept Start(Consumer_Number: in Consumer_Type;
                    Consumption_Time: in Integer) do
