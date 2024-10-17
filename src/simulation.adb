@@ -41,23 +41,23 @@ procedure Simulation is
 
    ----TASK DECLARATIONS----
 
-   -- Producer produces determined product
+   -- Producer collects determined fruit
    task type Producer is
       entry Start(Product: in Producer_Type; Production_Time: in Integer);
    end Producer;
 
-   -- Consumer gets an arbitrary assembly of several products from the buffer
+   -- Consumer gets an arbitrary assembly of several fruits
    -- but he/she orders it randomly
    task type Consumer is
       entry Start(Consumer_Number: in Consumer_Type;
                   Consumption_Time: in Integer);
    end Consumer;
 
-   -- Buffer receives products from Producers and delivers Assemblies to Consumers
+   -- Storage receives fruits from Producers and delivers Juices to Consumers
    task type Buffer is
-      -- Accept a product to the storage (provided there is a room for it)
+      -- Accept a fruiot to the storage (provided there is a room for it)
       entry Take(Product: in Producer_Type; Number: in Integer);
-      -- Deliver an assembly (provided there are enough products for it)
+      -- Deliver a juice (provided there are enough fruits for it)
       entry Deliver(Assembly: in Assembly_Type; Number: out Integer);
 
       entry Sunday(Day: in Days_Type);
@@ -121,7 +121,7 @@ procedure Simulation is
       package Random_Consumption is new
         Ada.Numerics.Discrete_Random(Consumption_Time_Range);
 
-      --each Consumer takes any (random) Assembly from the Buffer
+      --each Consumer takes any (random) Juice from the storage
       package Random_Assembly is new
         Ada.Numerics.Discrete_Random(Assembly_Type);
 
@@ -143,7 +143,7 @@ procedure Simulation is
       loop
          delay Duration(Random_Consumption.Random(G)); --  simulate consumption
          Assembly_Type := Random_Assembly.Random(GA);
-         -- take an assembly for consumption
+         -- take a juice for consumption
          B.Deliver(Assembly_Type, Assembly_Number);
          if Assembly_Number = 0 then
             Put_Line(ESC & "[96m" & "K: " & Consumer_Name(Consumer_Nb) & " zamowil  " &
@@ -157,7 +157,7 @@ procedure Simulation is
    end Consumer;
 
 
-   --Buffer--
+   --Storage--
 
    task body Buffer is
       Storage_Capacity: constant Integer := 50;
