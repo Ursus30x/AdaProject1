@@ -218,7 +218,7 @@ procedure Simulation is
       procedure Today_Is_Sunday is
       begin
          for W in Producer_Type loop
-            if Storage(W) > 0 then
+            if Storage(W) >= 3 then
                Storage(W) := Storage(W) - 3;
                In_Storage := In_Storage - 3;
 
