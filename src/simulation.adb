@@ -11,7 +11,7 @@ procedure Simulation is
    ----GLOBAL VARIABLES---
 
    Number_Of_Producers: constant Integer := 8;
-   Number_Of_Assemblies: constant Integer := 4;
+   Number_Of_Assemblies: constant Integer := 8;
    Number_Of_Consumers: constant Integer := 3;
    Number_Of_Days: constant Integer := 7;
 
@@ -25,8 +25,9 @@ procedure Simulation is
    Product_Name: constant array (Producer_Type) of String(1 .. 7)
      := ("Jablko ", "Kiwi   ", "Mango  ", "Arbuz  ", "Sliwka ", "Ananas ", "Cytryna", "Kaktus ");
    --Assembly is a collection of products
-   Assembly_Name: constant array (Assembly_Type) of String(1 .. 16)
-     := ("Sok_JabKiwManArb", "Sok_SliAnaCytKak", "Sok_ManArbCytKak", "Sok_JabKiwSliAna");
+   Assembly_Name: constant array (Assembly_Type) of String(1 .. 10)
+     := ("Sok_JabKiw", "Sok_SliAna", "Sok_ArbCyt", "Sok_JabKiw",
+        "Sok_ManArb", "Sok_CytKak", "Sok_ManKak", "Sok_SliAna");
 
 
 
@@ -96,7 +97,7 @@ procedure Simulation is
             Random_Time := Duration(Random_Production.Random(G));
             delay Random_Time;
             Put_Line(ESC & "[93m" & "P: Wytworzono " & Product_Name(Producer_Type_Number)
-                     & " number "  & Integer'Image(Product_Number) & ESC & "[0m");
+                     & " numer "  & Integer'Image(Product_Number) & ESC & "[0m");
             -- Accept for storage
             B.Take(Producer_Type_Number, Product_Number);
             Product_Number := Product_Number + 1;
@@ -154,18 +155,22 @@ procedure Simulation is
    --Buffer--
 
    task body Buffer is
-      Storage_Capacity: constant Integer := 30;
+      Storage_Capacity: constant Integer := 50;
       type Storage_type is array (Producer_Type) of Integer;
       Storage: Storage_type
         := (0, 0, 0, 0, 0, 0, 0, 0);
       Assembly_Content: array(Assembly_Type, Producer_Type) of Integer
-        := ((2, 1, 2, 0, 2, 2, 1, 2),
-            (1, 2, 0, 1, 0, 1, 2, 1),
-            (3, 2, 2, 0, 1, 0, 1, 0),
-            (1, 2, 3, 1, 0, 2, 1, 0));
+        := ((2, 1, 0, 0, 0, 0, 0, 0),
+            (0, 0, 0, 0, 2, 1, 0, 0),
+            (3, 2, 2, 0, 0, 0, 0, 0),
+            (1, 2, 3, 1, 0, 0, 0, 0),
+            (2, 1, 2, 0, 0, 0, 0, 0),
+            (1, 2, 0, 1, 0, 0, 0, 0),
+            (3, 2, 2, 0, 0, 0, 0, 0),
+            (1, 2, 3, 1, 0, 0, 0, 0));
       Max_Assembly_Content: array(Producer_Type) of Integer;
       Assembly_Number: array(Assembly_Type) of Integer
-        := (1, 1, 1, 1);
+        := (1, 1, 1, 1, 1, 1, 1, 1);
       In_Storage: Integer := 0;
 
       procedure Setup_Variables is
@@ -214,8 +219,8 @@ procedure Simulation is
       begin
          for W in Producer_Type loop
             if Storage(W) > 0 then
-               Storage(W) := Storage(W) - 1;
-               In_Storage := In_Storage - 1;
+               Storage(W) := Storage(W) - 3;
+               In_Storage := In_Storage - 3;
 
             end if;
          end loop;
