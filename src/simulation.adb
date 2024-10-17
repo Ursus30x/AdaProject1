@@ -27,7 +27,11 @@ procedure Simulation is
    --Assembly is a collection of products
    Assembly_Name: constant array (Assembly_Type) of String(1 .. 10)
      := ("Sok_JabKiw", "Sok_SliAna", "Sok_ArbCyt", "Sok_JabKak",
-        "Sok_ManArb", "Sok_CytKak", "Sok_KiwSli", "Sok_ManAna");
+         "Sok_ManArb", "Sok_CytKak", "Sok_KiwSli", "Sok_ManAna");
+   -- Consumer names
+   Consumer_Name: constant array (1 .. Number_Of_Consumers)
+        of String(1 .. 5)
+        := ("Jakub", "Kazik", "Marek", "Julia", "Basia" , "Kasia");
 
 
 
@@ -123,9 +127,6 @@ procedure Simulation is
       Assembly_Number: Integer;
       Consumption: Integer;
       Assembly_Type: Integer;
-      Consumer_Name: constant array (1 .. Number_Of_Consumers)
-        of String(1 .. 5)
-        := ("Jakub", "Kazik", "Marek", "Julia", "Basia" , "Kasia");
    begin
       accept Start(Consumer_Number: in Consumer_Type;
                    Consumption_Time: in Integer) do
