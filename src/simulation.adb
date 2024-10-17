@@ -254,19 +254,19 @@ procedure Simulation is
                      Number := Assembly_Number(Assembly);
                      Assembly_Number(Assembly) := Assembly_Number(Assembly) + 1;
                   else
-                     Put_Line(ESC & "[91m" & "B: Brak skladnikow na " & Assembly_Name(Assembly)& ESC & "[0m");
+                     Put_Line(ESC & "[91m" & "M: Brak skladnikow na " & Assembly_Name(Assembly)& ESC & "[0m");
                      Number := 0;
                   end if;
                end Deliver;
                or
                accept Take(Product: in Producer_Type; Number: in Integer) do
                   if Can_Accept(Product) then
-                     Put_Line(ESC & "[91m" & "B: Zaakceptowano " & Product_Name(Product) & " numer " &
+                     Put_Line(ESC & "[91m" & "M: Zaakceptowano " & Product_Name(Product) & " numer " &
                               Integer'Image(Number)& ESC & "[0m");
                      Storage(Product) := Storage(Product) + 1;
                      In_Storage := In_Storage + 1;
                   else
-                     Put_Line(ESC & "[91m" & "B: Odrzucono " & Product_Name(Product) & " numer " &
+                     Put_Line(ESC & "[91m" & "M: Odrzucono " & Product_Name(Product) & " numer " &
                               Integer'Image(Number)& ESC & "[0m");
                   end if;
                end Take;
