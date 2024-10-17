@@ -96,7 +96,7 @@ procedure Simulation is
          then abort
             Random_Time := Duration(Random_Production.Random(G));
             delay Random_Time;
-            Put_Line(ESC & "[93m" & "P: Wytworzono " & Product_Name(Producer_Type_Number)
+            Put_Line(ESC & "[93m" & "P: Zebrano " & Product_Name(Producer_Type_Number)
                      & " numer "  & Integer'Image(Product_Number) & ESC & "[0m");
             -- Accept for storage
             B.Take(Producer_Type_Number, Product_Number);
