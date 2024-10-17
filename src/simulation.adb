@@ -224,7 +224,7 @@ procedure Simulation is
 
             end if;
          end loop;
-         Put_Line(ESC & "[32m" & "Niedziela nie handlowa, inspekcja magazynu!" & ESC & "[0m");
+         Put_Line(ESC & "[35m" & "Niedziela nie handlowa, inspekcja magazynu!" & ESC & "[0m");
          Storage_Contents;
       end Today_Is_Sunday;
 
