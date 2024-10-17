@@ -26,8 +26,8 @@ procedure Simulation is
      := ("Jablko ", "Kiwi   ", "Mango  ", "Arbuz  ", "Sliwka ", "Ananas ", "Cytryna", "Kaktus ");
    --Assembly is a collection of products
    Assembly_Name: constant array (Assembly_Type) of String(1 .. 10)
-     := ("Sok_JabKiw", "Sok_SliAna", "Sok_ArbCyt", "Sok_JabKiw",
-        "Sok_ManArb", "Sok_CytKak", "Sok_ManKak", "Sok_SliAna");
+     := ("Sok_JabKiw", "Sok_SliAna", "Sok_ArbCyt", "Sok_JabKak",
+        "Sok_ManArb", "Sok_CytKak", "Sok_KiwSli", "Sok_ManAna");
 
 
 
@@ -160,14 +160,14 @@ procedure Simulation is
       Storage: Storage_type
         := (0, 0, 0, 0, 0, 0, 0, 0);
       Assembly_Content: array(Assembly_Type, Producer_Type) of Integer
-        := ((2, 1, 0, 0, 0, 0, 0, 0),
-            (0, 0, 0, 0, 2, 1, 0, 0),
-            (3, 2, 2, 0, 0, 0, 0, 0),
-            (1, 2, 3, 1, 0, 0, 0, 0),
-            (2, 1, 2, 0, 0, 0, 0, 0),
-            (1, 2, 0, 1, 0, 0, 0, 0),
-            (3, 2, 2, 0, 0, 0, 0, 0),
-            (1, 2, 3, 1, 0, 0, 0, 0));
+        := ((4, 3, 0, 0, 0, 0, 0, 0),
+            (0, 0, 0, 0, 4, 3, 0, 0),
+            (0, 0, 0, 4, 0, 0, 3, 0),
+            (3, 0, 0, 0, 0, 0, 0, 4),
+            (0, 0, 4, 3, 0, 0, 0, 0),
+            (0, 0, 0, 0, 0, 0, 4, 3),
+            (0, 4, 0, 0, 3, 0, 0, 0),
+            (0, 0, 3, 0, 0, 4, 0, 0));
       Max_Assembly_Content: array(Producer_Type) of Integer;
       Assembly_Number: array(Assembly_Type) of Integer
         := (1, 1, 1, 1, 1, 1, 1, 1);
