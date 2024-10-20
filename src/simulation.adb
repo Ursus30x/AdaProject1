@@ -177,6 +177,7 @@ procedure Simulation is
       Assembly_Number: array(Assembly_Type) of Integer
         := (1, 1, 1, 1, 1, 1, 1, 1);
       In_Storage: Integer := 0;
+      Unsucessfull_Deliveries: Integer := 0;
 
       procedure Setup_Variables is
       begin
@@ -190,11 +191,25 @@ procedure Simulation is
          end loop;
       end Setup_Variables;
 
+      procedure StorageClean is
+      begin
+         for W in Producer_Type loop
+            Storage(W) := 0;
+         end loop;
+         In_Storage := 0;
+      end StorageClean;
+
       function Can_Accept(Product: Producer_Type) return Boolean is
       begin
          if In_Storage >= Storage_Capacity then
+            Unsucessfull_Deliveries := Unsucessfull_Deliveries + 1;
+            if Unsucessfull_Deliveries >= 10 then
+               Put_Line(ESC & "[91m" & "M: Z powodu przepelnionego magazynu, owoce splesnialy poniewaz nowe dostawy zostaly zablokowane"& ESC & "[0m");
+               StorageClean;
+            end if;
             return False;
          else
+            Unsucessfull_Deliveries := 0;
             return True;
          end if;
       end Can_Accept;
@@ -223,9 +238,9 @@ procedure Simulation is
       procedure Today_Is_Sunday is
       begin
          for W in Producer_Type loop
-            if Storage(W) >= 3 then
-               Storage(W) := Storage(W) - 3;
-               In_Storage := In_Storage - 3;
+            if Storage(W) >= 1 then
+               Storage(W) := Storage(W) - 1;
+               In_Storage := In_Storage - 1;
 
             end if;
          end loop;
