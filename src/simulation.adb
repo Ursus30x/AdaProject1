@@ -10,8 +10,8 @@ procedure Simulation is
 
    ----GLOBAL VARIABLES---
 
-   Number_Of_Producers: constant Integer := 8;
-   Number_Of_Assemblies: constant Integer := 8;
+   Number_Of_Producers: constant Integer := 4;
+   Number_Of_Assemblies: constant Integer := 5;
    Number_Of_Consumers: constant Integer := 6;
    Number_Of_Days: constant Integer := 7;
 
@@ -23,13 +23,12 @@ procedure Simulation is
    --A range of collected fruits
 
    Product_Name: constant array (Producer_Type) of String(1 .. 7)
-     := ("Jablko ", "Kiwi   ", "Mango  ", "Arbuz  ", "Sliwka ", "Ananas ", "Cytryna", "Kaktus ");
+     := ("Jablko ", "Kiwi   ", "Mango  ", "Arbuz  ");
    
    --Assembly of juices
    
    Assembly_Name: constant array (Assembly_Type) of String(1 .. 10)
-     := ("Sok_JabKiw", "Sok_SliAna", "Sok_ArbCyt", "Sok_JabKak",
-         "Sok_ManArb", "Sok_CytKak", "Sok_KiwSli", "Sok_ManAna");
+     := ("Sok_JabKiw", "Sok_JabMan","Sok_ManArb", "Sok_KiwArb", "Sok_Muliwi");
    
    -- Consumer names
    
@@ -160,22 +159,19 @@ procedure Simulation is
    --Storage--
 
    task body Buffer is
-      Storage_Capacity: constant Integer := 50;
+      Storage_Capacity: constant Integer := 15;
       type Storage_type is array (Producer_Type) of Integer;
       Storage: Storage_type
-        := (0, 0, 0, 0, 0, 0, 0, 0);
+        := (0, 0, 0, 0);
       Assembly_Content: array(Assembly_Type, Producer_Type) of Integer
-        := ((4, 3, 0, 0, 0, 0, 0, 0),
-            (0, 0, 0, 0, 4, 3, 0, 0),
-            (0, 0, 0, 4, 0, 0, 3, 0),
-            (3, 0, 0, 0, 0, 0, 0, 4),
-            (0, 0, 4, 3, 0, 0, 0, 0),
-            (0, 0, 0, 0, 0, 0, 4, 3),
-            (0, 4, 0, 0, 3, 0, 0, 0),
-            (0, 0, 3, 0, 0, 4, 0, 0));
+        := ((4, 3, 0, 0),
+            (3, 0, 4, 0),
+            (0, 0, 3, 4),
+            (0, 3, 0, 3),
+            (3, 3, 3, 3));
       Max_Assembly_Content: array(Producer_Type) of Integer;
       Assembly_Number: array(Assembly_Type) of Integer
-        := (1, 1, 1, 1, 1, 1, 1, 1);
+        := (1, 1, 1, 1, 1);
       In_Storage: Integer := 0;
       Unsucessfull_Deliveries: Integer := 0;
 
@@ -203,7 +199,7 @@ procedure Simulation is
       begin
          if In_Storage >= Storage_Capacity then
             Unsucessfull_Deliveries := Unsucessfull_Deliveries + 1;
-            if Unsucessfull_Deliveries >= 10 then
+            if Unsucessfull_Deliveries >= 7 then
                Put_Line(ESC & "[91m" & "M: Z powodu przepelnionego magazynu, owoce splesnialy poniewaz nowe dostawy zostaly zablokowane"& ESC & "[0m");
                StorageClean;
             end if;
